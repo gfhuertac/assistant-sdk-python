@@ -43,6 +43,8 @@ WARNING_NOT_REGISTERED = """
     https://developers.google.com/assistant/sdk/guides/library/python/embed/register-device
 """
 
+from arduino import Arduino
+board = Arduino()
 
 def process_event(event):
     """Pretty prints events.
@@ -64,7 +66,20 @@ def process_event(event):
     if event.type == EventType.ON_DEVICE_ACTION:
         for command, params in event.actions:
             print('Do command', command, 'with params', str(params))
-
+            if command == "action.devices.commands.OnOff":
+                if params['on']:
+                    print('Turning the LED on.')
+                    board.turn_on()
+                else:
+                    print('Turning the LED off.')
+                    board.turn_off()
+            elif command == "action.devices.commands.StartStop":
+                if params['start']:
+                    print('Starting the show')
+                    board.start()
+                else:
+                    print('Stopping the show')
+                    board.stop()
 
 def main():
     parser = argparse.ArgumentParser(
